@@ -1,0 +1,23 @@
+{
+  "records": [
+    {
+      "id": "demo-001",
+      "name": "客户 A 折扣路由策略",
+      "status": "active",
+      "statusLabel": "生效中",
+      "owner": "平台运营",
+      "risk": "中",
+      "updatedAt": "2026-06-01"
+    },
+    {
+      "id": "demo-002",
+      "name": "优质货源保护策略",
+      "status": "draft",
+      "statusLabel": "草稿",
+      "owner": "渠道运营",
+      "risk": "低",
+      "updatedAt": "2026-06-01"
+    }
+  ]
+}
+

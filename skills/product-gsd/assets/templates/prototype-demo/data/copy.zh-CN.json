@@ -1,0 +1,9 @@
+{
+  "title": "Product GSD Prototype Demo",
+  "subtitle": "轻量可演示原型：比静态原型更强，比真实开发更轻。",
+  "listTitle": "策略列表",
+  "primaryAction": "创建策略",
+  "errorAction": "模拟异常",
+  "feedback": "选择筛选条件或点击操作按钮查看反馈。"
+}
+

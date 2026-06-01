@@ -1,0 +1,30 @@
+{
+  "pages": [
+    {
+      "id": "demo-list",
+      "name": "Demo 列表页",
+      "path": "/",
+      "regions": ["demo.sidebar", "demo.main", "demo.list-card"]
+    }
+  ],
+  "entities": [
+    {
+      "id": "demoRecord",
+      "name": "Demo 记录",
+      "fields": ["id", "name", "status", "statusLabel", "owner", "risk", "updatedAt"]
+    }
+  ],
+  "statuses": [
+    {"id": "active", "name": "生效中"},
+    {"id": "draft", "name": "草稿"},
+    {"id": "paused", "name": "已停用"}
+  ],
+  "actions": [
+    {"id": "create", "name": "创建策略", "dataPmId": "demo.action.primary"},
+    {"id": "simulateError", "name": "模拟异常", "dataPmId": "demo.action.simulate-error"}
+  ],
+  "permissions": [
+    {"role": "platform_operator", "actions": ["create", "simulateError"]}
+  ]
+}
+
