@@ -1,4 +1,0 @@
-display_name: Product GSD
-short_description: 产品经理 AI 工作流框架
-default_prompt: 用 product-gsd 帮我梳理需求、写 PRD、生成 Prototype Demo，并沉淀到 .product 工作台。
-

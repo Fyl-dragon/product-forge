@@ -1,0 +1,17 @@
+{
+  "name": "product-forge",
+  "version": "0.1.0",
+  "description": "ProductForge PM Operating System skill pack for Codex",
+  "bin": {
+    "product-forge": "bin/product-forge.js",
+    "pf": "bin/product-forge.js"
+  },
+  "scripts": {
+    "validate": "node bin/product-forge.js validate --source skills",
+    "list": "node bin/product-forge.js list --source skills"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
