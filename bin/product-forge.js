@@ -26,6 +26,20 @@ const REQUIRED_SKILLS = [
   "pf-retro",
 ];
 
+const LEGACY_SKILL_DIRS = [
+  "product-gsd",
+  "pgd-new-product",
+  "pgd-intake",
+  "pgd-research",
+  "pgd-define-feature",
+  "pgd-write-prd",
+  "pgd-prototype",
+  "pgd-plan-release",
+  "pgd-review",
+  "pgd-acceptance",
+  "pgd-retro",
+];
+
 const PROTOTYPE_TEMPLATE_FILES = [
   "index.html",
   "styles.css",
@@ -231,6 +245,13 @@ function validateSource(source) {
     }
   }
 
+  for (const skill of LEGACY_SKILL_DIRS) {
+    const legacyPath = path.join(source, skill);
+    if (fs.existsSync(legacyPath)) {
+      problems.push(`Forbidden old skill directory remains: ${legacyPath}`);
+    }
+  }
+
   const templateRoot = path.join(source, "product-forge", "assets", "templates", "prototype-demo");
   for (const rel of PROTOTYPE_TEMPLATE_FILES) {
     const file = path.join(templateRoot, rel);
@@ -315,6 +336,13 @@ function commandInstall(args) {
     return;
   }
   fs.mkdirSync(skillsDir, { recursive: true });
+  for (const skill of LEGACY_SKILL_DIRS) {
+    const legacyDest = path.join(skillsDir, skill);
+    if (fs.existsSync(legacyDest)) {
+      fs.rmSync(legacyDest, { recursive: true, force: true });
+      console.log(`Removed legacy ${legacyDest}`);
+    }
+  }
   for (const skill of REQUIRED_SKILLS) {
     const src = path.join(source, skill);
     const dest = path.join(skillsDir, skill);
@@ -334,7 +362,7 @@ function commandStatus(args) {
 
 function commandUninstall(args) {
   const skillsDir = resolveCodexSkills(args);
-  for (const skill of REQUIRED_SKILLS) {
+  for (const skill of REQUIRED_SKILLS.concat(LEGACY_SKILL_DIRS)) {
     const dest = path.join(skillsDir, skill);
     fs.rmSync(dest, { recursive: true, force: true });
     console.log(`Removed ${dest}`);

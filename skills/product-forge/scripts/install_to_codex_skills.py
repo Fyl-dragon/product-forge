@@ -6,6 +6,21 @@ import shutil
 from pathlib import Path
 
 
+LEGACY_SKILL_DIRS = [
+    "product-gsd",
+    "pgd-new-product",
+    "pgd-intake",
+    "pgd-research",
+    "pgd-define-feature",
+    "pgd-write-prd",
+    "pgd-prototype",
+    "pgd-plan-release",
+    "pgd-review",
+    "pgd-acceptance",
+    "pgd-retro",
+]
+
+
 def copy_skill(src: Path, dest: Path) -> None:
     if dest.exists():
         shutil.rmtree(dest)
@@ -25,6 +40,13 @@ def main() -> int:
         raise SystemExit(f"Source skill pack not found: {source}")
 
     target.mkdir(parents=True, exist_ok=True)
+
+    for legacy in LEGACY_SKILL_DIRS:
+        legacy_path = target / legacy
+        if legacy_path.exists():
+            shutil.rmtree(legacy_path)
+            print(f"Removed legacy {legacy_path}")
+
     for skill_dir in sorted(path for path in source.iterdir() if path.is_dir()):
         copy_skill(skill_dir, target / skill_dir.name)
         print(f"Installed {skill_dir.name} -> {target / skill_dir.name}")
