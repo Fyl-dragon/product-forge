@@ -4,7 +4,7 @@
   "description": "ProductForge PM Operating System skill pack for Codex",
   "bin": {
     "product-forge": "bin/product-forge.js",
-    "pf": "bin/product-forge.js"
+    "pm": "bin/product-forge.js"
   },
   "scripts": {
     "validate": "node bin/product-forge.js validate --source skills",

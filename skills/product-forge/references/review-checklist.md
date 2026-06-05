@@ -1,6 +1,6 @@
 # PM Review Checklist
 
-Use this checklist for `$pf-review`.
+Use this checklist for `$pm-review`.
 
 ## Problem And Scope
 

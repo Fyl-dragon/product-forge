@@ -7,32 +7,27 @@ from pathlib import Path
 
 REQUIRED_SKILLS = [
     "product-forge",
-    "pf-help",
-    "pf-init",
-    "pf-intake",
-    "pf-discovery",
-    "pf-research",
-    "pf-roadmap",
-    "pf-metrics",
-    "pf-narrative",
-    "pf-define",
-    "pf-spec",
-    "pf-prd",
-    "pf-prototype",
-    "pf-plan",
-    "pf-project",
-    "pf-review",
-    "pf-accept",
-    "pf-retro",
+    "pm-help",
+    "pm-init",
+    "pm-intake",
+    "pm-discovery",
+    "pm-research",
+    "pm-roadmap",
+    "pm-metrics",
+    "pm-narrative",
+    "pm-define",
+    "pm-spec",
+    "pm-prd",
+    "pm-prototype",
+    "pm-plan",
+    "pm-project",
+    "pm-review",
+    "pm-accept",
+    "pm-retro",
 ]
 
 REQUIRED_PRODUCT_FILES = [
     ".product/PRODUCT.md",
-    ".product/REQUIREMENTS.md",
-    ".product/DISCOVERY.md",
-    ".product/PRIORITIZATION.md",
-    ".product/METRICS.md",
-    ".product/ROADMAP.md",
     ".product/STATE.md",
     ".product/config.yaml",
 ]
@@ -49,6 +44,23 @@ FORBIDDEN_SKILL_DIRS = [
     "p" + "gd-review",
     "p" + "gd-acceptance",
     "p" + "gd-retro",
+    "p" + "f-help",
+    "p" + "f-init",
+    "p" + "f-intake",
+    "p" + "f-discovery",
+    "p" + "f-research",
+    "p" + "f-roadmap",
+    "p" + "f-metrics",
+    "p" + "f-narrative",
+    "p" + "f-define",
+    "p" + "f-spec",
+    "p" + "f-prd",
+    "p" + "f-prototype",
+    "p" + "f-plan",
+    "p" + "f-project",
+    "p" + "f-review",
+    "p" + "f-accept",
+    "p" + "f-retro",
 ]
 
 PROJECT_TEMPLATE_FILES = [
@@ -61,6 +73,7 @@ PROJECT_TEMPLATE_FILES = [
 ]
 
 REQUIRED_REFERENCES = [
+    "interaction-protocol.md",
     "methodology.md",
     "method-library.md",
     "project-workspace.md",
@@ -70,8 +83,15 @@ REQUIRED_REFERENCES = [
     "domain-packages.md",
 ]
 
+INTERACTIVE_SKILL_TOKENS = [
+    "interaction-protocol.md",
+    "boundary question",
+    "three options",
+    "请回复 a / b / c",
+]
+
 REQUIRED_CONTENT = {
-    "pf-discovery/SKILL.md": [
+    "pm-discovery/SKILL.md": [
         "outcome",
         "opportunity",
         "solution",
@@ -79,7 +99,7 @@ REQUIRED_CONTENT = {
         "evidence quality",
         "decision rule",
     ],
-    "pf-metrics/SKILL.md": [
+    "pm-metrics/SKILL.md": [
         "north star",
         "input metrics",
         "guardrails",
@@ -88,7 +108,7 @@ REQUIRED_CONTENT = {
         "owner",
         "review cadence",
     ],
-    "pf-narrative/SKILL.md": [
+    "pm-narrative/SKILL.md": [
         "press release",
         "customer faq",
         "internal faq",
@@ -96,14 +116,32 @@ REQUIRED_CONTENT = {
         "rejected alternatives",
         "open questions",
     ],
-    "pf-project/SKILL.md": [
+    "pm-project/SKILL.md": [
         "raid escalation rule",
         "stakeholder update cadence",
         "decision log",
         "launch readiness gate",
         "acceptance progress state",
     ],
+    "product-forge/SKILL.md": [
+        "interaction-protocol.md",
+        "boundary question",
+        "stage-only",
+        "lazy generation",
+    ],
+    "product-forge/references/interaction-protocol.md": [
+        "exactly one high-leverage boundary question",
+        "exactly three mutually exclusive options",
+        "do not generate formal artifacts before the user chooses",
+        "stage-only generation",
+        "请回复 a / b / c",
+    ],
     "product-forge/scripts/init_product_workspace.py": [
+        "boundary_confirmation",
+        "question_format",
+        "workspace_init: minimal",
+        "feature_pack: stage-only",
+        "project_pack: stage-only",
         "Assumption Test",
         "Evidence Quality",
         "Decision Rule",
@@ -112,6 +150,9 @@ REQUIRED_CONTENT = {
         "Review Cadence",
     ],
     "product-forge/scripts/init_feature_pack.py": [
+        "--stage",
+        "\"all\"",
+        "--include-shared",
         "Assumption Test",
         "Evidence Quality",
         "Decision Rule",
@@ -121,6 +162,8 @@ REQUIRED_CONTENT = {
         "Review Cadence",
     ],
     "product-forge/scripts/init_project_pack.py": [
+        "--stage",
+        "\"all\"",
         "Escalation Rules",
         "Update Cadence",
         "Decision Requests",
@@ -195,6 +238,20 @@ def check_required_content(base: Path, problems: list[str], missing: list[str]) 
                 problems.append(f"{path}: missing required method/template field {token!r}")
 
 
+def check_interactive_skills(base: Path, problems: list[str], missing: list[str]) -> None:
+    for skill in REQUIRED_SKILLS:
+        if not skill.startswith("pm-"):
+            continue
+        path = base / skill / "SKILL.md"
+        if not path.exists():
+            missing.append(str(path))
+            continue
+        text = path.read_text(encoding="utf-8").lower()
+        for token in INTERACTIVE_SKILL_TOKENS:
+            if token not in text:
+                problems.append(f"{path}: missing interactive workflow token {token!r}")
+
+
 def main() -> int:
     root = Path.cwd()
     base = find_skill_base(root)
@@ -236,6 +293,7 @@ def main() -> int:
             missing.append(str(reference_root / rel))
 
     check_required_content(base, problems, missing)
+    check_interactive_skills(base, problems, missing)
 
     if missing or problems:
         print("Validation failed. Missing files:")

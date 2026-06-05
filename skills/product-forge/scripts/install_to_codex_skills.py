@@ -18,6 +18,23 @@ LEGACY_SKILL_DIRS = [
     "pgd-review",
     "pgd-acceptance",
     "pgd-retro",
+    "pf-help",
+    "pf-init",
+    "pf-intake",
+    "pf-discovery",
+    "pf-research",
+    "pf-roadmap",
+    "pf-metrics",
+    "pf-narrative",
+    "pf-define",
+    "pf-spec",
+    "pf-prd",
+    "pf-prototype",
+    "pf-plan",
+    "pf-project",
+    "pf-review",
+    "pf-accept",
+    "pf-retro",
 ]
 
 

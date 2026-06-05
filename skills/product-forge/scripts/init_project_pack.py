@@ -5,8 +5,18 @@ import argparse
 from pathlib import Path
 
 
+STAGE_ORDER = [
+    "plan",
+    "raid",
+    "stakeholder",
+    "decision",
+    "readiness",
+    "acceptance",
+]
+
+
 TEMPLATES = {
-    "project-plan.md": """# {name} 项目计划
+    "plan": """# {name} 项目计划
 
 ## 项目目标
 
@@ -35,7 +45,7 @@ TODO
 
 TODO
 """,
-    "raid-log.md": """# {name} RAID Log
+    "raid": """# {name} RAID Log
 
 ## Escalation Rules
 
@@ -65,7 +75,7 @@ TODO
 | ID | Severity | 依赖 | 来源 | 影响范围 | Blocker | Escalation Owner | 负责人 | 状态 |
 |---|---|---|---|---|---|---|---|---|
 """,
-    "stakeholder-update.md": """# {name} 干系人更新
+    "stakeholder": """# {name} 干系人更新
 
 ## Update Cadence
 
@@ -98,12 +108,12 @@ TODO
 
 TODO
 """,
-    "decision-log.md": """# {name} Decision Log
+    "decision": """# {name} Decision Log
 
 | Date | Decision Type | Status | Decision | Rationale | Evidence | Owner | Revisit Condition |
 |---|---|---|---|---|---|---|---|
 """,
-    "launch-readiness.md": """# {name} 上线准备
+    "readiness": """# {name} 上线准备
 
 ## Readiness Gate Summary
 
@@ -131,7 +141,7 @@ TODO
 
 TODO
 """,
-    "acceptance-tracker.md": """# {name} 验收推进
+    "acceptance": """# {name} 验收推进
 
 ## Status Rules
 
@@ -142,6 +152,16 @@ Allowed states: Not Started, In Progress, Blocked, Evidence Ready, Accepted, Wai
 | Capability | 验收场景 | Business Rule / Permission / State Coverage | Evidence Link | Blocker | Owner | Status | 备注 |
 |---|---|---|---|---|---|---|---|
 """,
+}
+
+
+FILE_NAMES = {
+    "plan": "project-plan.md",
+    "raid": "raid-log.md",
+    "stakeholder": "stakeholder-update.md",
+    "decision": "decision-log.md",
+    "readiness": "launch-readiness.md",
+    "acceptance": "acceptance-tracker.md",
 }
 
 
@@ -169,16 +189,35 @@ def main() -> int:
     parser.add_argument("name", help="Project name.")
     parser.add_argument("--slug", help="Project slug. Defaults to generated slug.")
     parser.add_argument("--root", default=".", help="Project root.")
+    parser.add_argument(
+        "--stage",
+        choices=STAGE_ORDER + ["all"],
+        default="plan",
+        help="Project stage to scaffold. Defaults to plan.",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
     slug = args.slug or slugify(args.name)
     project = root / ".product" / "projects" / slug
 
-    for filename, template in TEMPLATES.items():
-        write_if_missing(project / filename, template.format(name=args.name))
+    stages = STAGE_ORDER if args.stage == "all" else [args.stage]
+    created: list[str] = []
+
+    for stage in stages:
+        rel = FILE_NAMES[stage]
+        path = project / rel
+        if not path.exists():
+            write_if_missing(path, TEMPLATES[stage].format(name=args.name))
+            created.append(str(path))
 
     print(project)
+    if created:
+        print("Created:")
+        for item in created:
+            print("-", item)
+    else:
+        print("No files created; existing files were preserved.")
     return 0
 
 

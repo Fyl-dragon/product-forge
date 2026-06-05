@@ -1,6 +1,6 @@
 ---
 name: product-forge
-description: ProductForge PM Operating System for professional product managers. Use when Codex should guide product-management through project-management workflows: requirement analysis, research, product spec kernels, PRDs, product prototype demos, release planning, project coordination, reviews, acceptance, and retrospectives through pf-* skills with a persistent .product workspace and Codex-installable skill pack.
+description: ProductForge PM Operating System for professional product managers. Use when Codex should guide product-management through project-management workflows: requirement analysis, research, product spec kernels, PRDs, product prototype demos, release planning, project coordination, reviews, acceptance, and retrospectives through pm-* skills with a persistent .product workspace and Codex-installable skill pack.
 ---
 
 # ProductForge
@@ -16,79 +16,88 @@ Product work is managed as persistent context under `.product/`:
 ```text
 .product/
   PRODUCT.md
-  REQUIREMENTS.md
-  DISCOVERY.md
-  PRIORITIZATION.md
-  METRICS.md
-  ROADMAP.md
   STATE.md
   config.yaml
+  optional root files, created lazily:
+    REQUIREMENTS.md
+    DISCOVERY.md
+    PRIORITIZATION.md
+    METRICS.md
+    ROADMAP.md
   features/<feature-slug>/
-    00-intake.md
-    01-research.md
-    discovery.md
-    opportunity-solution-tree.md
-    02-define.md
-    SPEC.md
-    PRFAQ.md
-    docs/prd.md
-    metrics.md
-    prototype/
-      index.html
-      styles.css
-      app.js
-      data/sample-data.json
-      data/copy.zh-CN.json
-      spec/product-spec.json
-    acceptance.md
-    review.md
-    decision-log.md
-    versions/
+    current-stage files only, created lazily:
+      00-intake.md
+      01-research.md
+      discovery.md
+      opportunity-solution-tree.md
+      02-define.md
+      SPEC.md
+      PRFAQ.md
+      docs/prd.md
+      metrics.md
+      prototype/
+      acceptance.md
+      review.md
+      decision-log.md
+      versions/
   projects/<project-slug>/
-    project-plan.md
-    raid-log.md
-    stakeholder-update.md
-    decision-log.md
-    launch-readiness.md
-    acceptance-tracker.md
+    current-stage files only, created lazily:
+      project-plan.md
+      raid-log.md
+      stakeholder-update.md
+      decision-log.md
+      launch-readiness.md
+      acceptance-tracker.md
   references/
 ```
+
+`REQUIREMENTS.md`, `DISCOVERY.md`, `PRIORITIZATION.md`, `METRICS.md`, and `ROADMAP.md` are optional root artifacts that should be created only when the workflow reaches those stages.
 
 ## Workflow Routing
 
 Use these command skills when the user mentions them:
 
-- `$pf-help`: recommend the next ProductForge command.
-- `$pf-init`: initialize `.product/` for a product or repo.
-- `$pf-intake`: turn rough ideas, notes, or meetings into structured intake.
-- `$pf-discovery`: run continuous discovery, opportunity mapping, and assumption testing.
-- `$pf-research`: competitor, market, user, and opportunity analysis.
-- `$pf-roadmap`: prioritize opportunities and maintain product strategy and roadmap.
-- `$pf-metrics`: define North Star, input, guardrail, launch, and UX metrics.
-- `$pf-narrative`: create customer-backward PRFAQ or launch narrative.
-- `$pf-define`: define feature scope, entities, workflow, states, permissions, and rules.
-- `$pf-spec`: create or update the product spec kernel.
-- `$pf-prd`: create or update `.product/features/<feature-slug>/docs/prd.md`.
-- `$pf-prototype`: create a lightweight multi-file prototype demo.
-- `$pf-plan`: create milestones, dependency map, delivery plan, and launch checklist.
-- `$pf-project`: manage milestones, RAID log, stakeholder updates, launch readiness, and acceptance progress.
-- `$pf-review`: review PRD/prototype/demo for PM quality and product risk.
-- `$pf-accept`: create acceptance criteria, UAT cases, rollout gates, and evidence standards.
-- `$pf-retro`: capture decisions, lessons, follow-ups, and product memory.
+- `$pm-help`: recommend the next ProductForge command.
+- `$pm-init`: initialize `.product/` for a product or repo.
+- `$pm-intake`: turn rough ideas, notes, or meetings into structured intake.
+- `$pm-discovery`: run continuous discovery, opportunity mapping, and assumption testing.
+- `$pm-research`: competitor, market, user, and opportunity analysis.
+- `$pm-roadmap`: prioritize opportunities and maintain product strategy and roadmap.
+- `$pm-metrics`: define North Star, input, guardrail, launch, and UX metrics.
+- `$pm-narrative`: create customer-backward PRFAQ or launch narrative.
+- `$pm-define`: define feature scope, entities, workflow, states, permissions, and rules.
+- `$pm-spec`: create or update the product spec kernel.
+- `$pm-prd`: create or update `.product/features/<feature-slug>/docs/prd.md`.
+- `$pm-prototype`: create a lightweight multi-file prototype demo.
+- `$pm-plan`: create milestones, dependency map, delivery plan, and launch checklist.
+- `$pm-project`: manage milestones, RAID log, stakeholder updates, launch readiness, and acceptance progress.
+- `$pm-review`: review PRD/prototype/demo for PM quality and product risk.
+- `$pm-accept`: create acceptance criteria, UAT cases, rollout gates, and evidence standards.
+- `$pm-retro`: capture decisions, lessons, follow-ups, and product memory.
 
 If the user asks broadly, choose the smallest workflow that completes the request. If the request involves LLM aggregation platforms, model routing, cloud vendors, model pricing, suppliers, channels, CRM/RPM, settlement, or resource pools, also read `pm-llm-platform`.
 
+## Interaction Contract
+
+Read `references/interaction-protocol.md` and follow it strictly.
+
+- Every `pm-*` command must begin with one boundary question and exactly three options.
+- Before the user chooses, do not generate formal artifacts.
+- Use the chosen option to determine scope, depth, and file fan-out.
+- Default to stage-only output: only create the current-step minimal artifact(s), not the whole pack.
+- Update `.product/STATE.md` with the chosen boundary, current phase, next step, locked decisions, and open questions when it materially changes.
+
 ## Stage Gates
 
-- `$pf-prd` expects `SPEC.md` unless the user explicitly asks for fast path.
-- `$pf-prototype` expects `SPEC.md` or PRD context and only produces product demonstration assets.
-- `$pf-project` coordinates product/project management readiness and does not create engineering execution tasks.
-- `$pf-roadmap` ranks product opportunities and does not create engineering execution tasks.
-- `$pf-discovery` must record evidence quality before recommending a direction.
-- `$pf-metrics` must connect success signals to customer value and business outcomes.
-- `$pf-narrative` must expose customer-facing value, FAQ gaps, and stakeholder risks before PRD or executive review.
-- `$pf-review` returns findings first, ordered P0-P3.
-- `$pf-accept` must tie scenarios back to capability IDs, business rules, permissions, state transitions, prototype demo coverage, rollout gates, and evidence.
+- `$pm-prd` expects `SPEC.md` unless the user explicitly asks for fast path.
+- `$pm-prototype` expects `SPEC.md` or PRD context and only produces product demonstration assets.
+- `$pm-project` coordinates product/project management readiness and does not create engineering execution tasks.
+- `$pm-roadmap` ranks product opportunities and does not create engineering execution tasks.
+- `$pm-discovery` must record evidence quality before recommending a direction.
+- `$pm-metrics` must connect success signals to customer value and business outcomes.
+- `$pm-narrative` must expose customer-facing value, FAQ gaps, and stakeholder risks before PRD or executive review.
+- `$pm-review` returns findings first, ordered P0-P3.
+- `$pm-accept` must tie scenarios back to capability IDs, business rules, permissions, state transitions, prototype demo coverage, rollout gates, and evidence.
 
 ## Boundary
 
@@ -96,6 +105,7 @@ ProductForge covers product management and product-side project management. It m
 
 ## Artifact Rules
 
+- Default artifact mode is lazy generation, not full scaffolding.
 - PRDs are Markdown unless the user asks otherwise.
 - Prototype demos are PM-owned demonstration assets by default, not production software.
 - Single-file HTML is allowed only for disposable demos and must be labeled disposable.
@@ -125,6 +135,7 @@ Every substantial output should make these explicit:
 
 ## References
 
+- Read `references/interaction-protocol.md` before running any `pm-*` command.
 - Read `references/methodology.md` for the full PM framework.
 - Read `references/prototype-demo.md` before generating or modifying prototype demos.
 - Read `references/review-checklist.md` before reviewing PRDs or prototypes.

@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 
 
-ROOT_FILES = {
+CORE_ROOT_FILES = {
     "PRODUCT.md": """# 产品说明
 
 ## 产品定位
@@ -24,6 +24,58 @@ TODO
 
 TODO
 """,
+    "STATE.md": """# ProductForge 状态
+
+## 当前状态
+
+TODO
+
+## 当前 Feature
+
+TODO
+
+## 当前阶段
+
+TODO
+
+## 下一步建议
+
+TODO
+
+## 已锁定决策
+
+TODO
+
+## 开放问题
+
+TODO
+""",
+    "config.yaml": """product_name: TODO
+communication_language: Chinese
+document_output_language: Chinese
+rigor: standard
+interaction_policy:
+  boundary_confirmation: required
+  question_format: one-question-three-options
+  fast_path: explicit-only
+artifact_policy:
+  workspace_init: minimal
+  feature_pack: stage-only
+  project_pack: stage-only
+artifact_paths:
+  product_root: .product
+  features: .product/features
+  projects: .product/projects
+workflow_gates:
+  research: true
+  review: true
+  acceptance: true
+targets:
+  codex: true
+""",
+}
+
+OPTIONAL_ROOT_FILES = {
     "REQUIREMENTS.md": """# 需求池
 
 | ID | 需求 | 来源 | 模块 | 优先级 | 状态 | 备注 |
@@ -97,47 +149,6 @@ TODO
 | 阶段 | 产品目标 | 范围 | 成功信号 | 状态 |
 |---|---|---|---|---|
 """,
-    "STATE.md": """# ProductForge 状态
-
-## 当前状态
-
-TODO
-
-## 当前 Feature
-
-TODO
-
-## 当前阶段
-
-TODO
-
-## 下一步建议
-
-TODO
-
-## 已锁定决策
-
-TODO
-
-## 开放问题
-
-TODO
-""",
-    "config.yaml": """product_name: TODO
-communication_language: Chinese
-document_output_language: Chinese
-rigor: standard
-artifact_paths:
-  product_root: .product
-  features: .product/features
-  projects: .product/projects
-workflow_gates:
-  research: true
-  review: true
-  acceptance: true
-targets:
-  codex: true
-""",
 }
 
 
@@ -151,6 +162,12 @@ def write_if_missing(path: Path, content: str) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser(description="Initialize a ProductForge workspace.")
     parser.add_argument("--root", default=".", help="Project root. Defaults to current directory.")
+    parser.add_argument(
+        "--mode",
+        choices=["minimal", "standard"],
+        default="minimal",
+        help="Initialization depth. Defaults to minimal.",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
@@ -160,7 +177,11 @@ def main() -> int:
     for subdir in ["features", "projects", "references"]:
         (product / subdir).mkdir(parents=True, exist_ok=True)
 
-    for name, content in ROOT_FILES.items():
+    root_files = dict(CORE_ROOT_FILES)
+    if args.mode == "standard":
+        root_files.update(OPTIONAL_ROOT_FILES)
+
+    for name, content in root_files.items():
         if write_if_missing(product / name, content):
             created.append(str(product / name))
 

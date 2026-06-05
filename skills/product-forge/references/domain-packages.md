@@ -17,6 +17,6 @@ Use `pm-llm-platform` for LLM aggregation platform work:
 
 When a user asks about LLM platform PRDs, model access, pricing, source routing, resource pools, supplier switching, channel quotation, or customer discount policies:
 
-1. Start with the relevant `pf-*` workflow.
+1. Start with the relevant `pm-*` workflow.
 2. Load `pm-llm-platform` as the domain package.
 3. Keep the final PM artifact under `.product/features/<feature-slug>/`.

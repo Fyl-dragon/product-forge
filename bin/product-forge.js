@@ -7,6 +7,37 @@ const path = require("path");
 
 const REQUIRED_SKILLS = [
   "product-forge",
+  "pm-help",
+  "pm-init",
+  "pm-intake",
+  "pm-discovery",
+  "pm-research",
+  "pm-roadmap",
+  "pm-metrics",
+  "pm-narrative",
+  "pm-define",
+  "pm-spec",
+  "pm-prd",
+  "pm-prototype",
+  "pm-plan",
+  "pm-project",
+  "pm-review",
+  "pm-accept",
+  "pm-retro",
+];
+
+const LEGACY_SKILL_DIRS = [
+  "product-gsd",
+  "pgd-new-product",
+  "pgd-intake",
+  "pgd-research",
+  "pgd-define-feature",
+  "pgd-write-prd",
+  "pgd-prototype",
+  "pgd-plan-release",
+  "pgd-review",
+  "pgd-acceptance",
+  "pgd-retro",
   "pf-help",
   "pf-init",
   "pf-intake",
@@ -24,20 +55,6 @@ const REQUIRED_SKILLS = [
   "pf-review",
   "pf-accept",
   "pf-retro",
-];
-
-const LEGACY_SKILL_DIRS = [
-  "product-gsd",
-  "pgd-new-product",
-  "pgd-intake",
-  "pgd-research",
-  "pgd-define-feature",
-  "pgd-write-prd",
-  "pgd-prototype",
-  "pgd-plan-release",
-  "pgd-review",
-  "pgd-acceptance",
-  "pgd-retro",
 ];
 
 const PROTOTYPE_TEMPLATE_FILES = [
@@ -59,6 +76,7 @@ const PROJECT_TEMPLATE_FILES = [
 ];
 
 const REQUIRED_REFERENCES = [
+  "interaction-protocol.md",
   "methodology.md",
   "method-library.md",
   "project-workspace.md",
@@ -68,8 +86,15 @@ const REQUIRED_REFERENCES = [
   "domain-packages.md",
 ];
 
+const INTERACTIVE_SKILL_TOKENS = [
+  "interaction-protocol.md",
+  "boundary question",
+  "three options",
+  "请回复 a / b / c",
+];
+
 const REQUIRED_CONTENT = {
-  "pf-discovery/SKILL.md": [
+  "pm-discovery/SKILL.md": [
     "outcome",
     "opportunity",
     "solution",
@@ -77,7 +102,7 @@ const REQUIRED_CONTENT = {
     "evidence quality",
     "decision rule",
   ],
-  "pf-metrics/SKILL.md": [
+  "pm-metrics/SKILL.md": [
     "north star",
     "input metrics",
     "guardrails",
@@ -86,7 +111,7 @@ const REQUIRED_CONTENT = {
     "owner",
     "review cadence",
   ],
-  "pf-narrative/SKILL.md": [
+  "pm-narrative/SKILL.md": [
     "press release",
     "customer faq",
     "internal faq",
@@ -94,14 +119,32 @@ const REQUIRED_CONTENT = {
     "rejected alternatives",
     "open questions",
   ],
-  "pf-project/SKILL.md": [
+  "pm-project/SKILL.md": [
     "raid escalation rule",
     "stakeholder update cadence",
     "decision log",
     "launch readiness gate",
     "acceptance progress state",
   ],
+  "product-forge/SKILL.md": [
+    "interaction-protocol.md",
+    "boundary question",
+    "stage-only",
+    "lazy generation",
+  ],
+  "product-forge/references/interaction-protocol.md": [
+    "exactly one high-leverage boundary question",
+    "exactly three mutually exclusive options",
+    "do not generate formal artifacts before the user chooses",
+    "stage-only generation",
+    "请回复 a / b / c",
+  ],
   "product-forge/scripts/init_product_workspace.py": [
+    "boundary_confirmation",
+    "question_format",
+    "workspace_init: minimal",
+    "feature_pack: stage-only",
+    "project_pack: stage-only",
     "Assumption Test",
     "Evidence Quality",
     "Decision Rule",
@@ -110,6 +153,9 @@ const REQUIRED_CONTENT = {
     "Review Cadence",
   ],
   "product-forge/scripts/init_feature_pack.py": [
+    "--stage",
+    "\"all\"",
+    "--include-shared",
     "Assumption Test",
     "Evidence Quality",
     "Decision Rule",
@@ -119,6 +165,8 @@ const REQUIRED_CONTENT = {
     "Review Cadence",
   ],
   "product-forge/scripts/init_project_pack.py": [
+    "--stage",
+    "\"all\"",
     "Escalation Rules",
     "Update Cadence",
     "Decision Requests",
@@ -280,6 +328,21 @@ function validateSource(source) {
     for (const token of tokens) {
       if (!text.includes(token.toLowerCase())) {
         problems.push(`${file}: missing required method/template field ${JSON.stringify(token)}`);
+      }
+    }
+  }
+
+  for (const skill of REQUIRED_SKILLS) {
+    if (!skill.startsWith("pm-")) continue;
+    const file = path.join(source, skill, "SKILL.md");
+    if (!fs.existsSync(file)) {
+      missing.push(file);
+      continue;
+    }
+    const text = fs.readFileSync(file, "utf8").toLowerCase();
+    for (const token of INTERACTIVE_SKILL_TOKENS) {
+      if (!text.includes(token.toLowerCase())) {
+        problems.push(`${file}: missing interactive workflow token ${JSON.stringify(token)}`);
       }
     }
   }
