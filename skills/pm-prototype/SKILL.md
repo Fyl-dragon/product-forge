@@ -38,9 +38,27 @@ Default mode is lazy generation. Only create the prototype files required by the
    - `copy.zh-CN.json` for visible copy
    - `index.html`, `styles.css`, and `app.js`
 6. Verify clickable workflow, responsive layout, and state coverage.
+7. Creation order matters:
+   - First create or refresh `spec/product-spec.json`, `data/sample-data.json`, and `data/copy.zh-CN.json`.
+   - Then create or refresh `index.html`, `styles.css`, and `app.js`.
+   - Only after all six files exist should you do verification or reply to the user.
 
 ## Rules
 
 - Every meaningful UI element needs stable `data-pm-id`.
 - Do not call real APIs.
 - Keep demo useful for product review and stakeholder alignment. Do not turn it into a development plan or production implementation.
+- For every boundary, still ship the full six-file prototype pack unless the task explicitly narrows the deliverables.
+- If no prototype exists yet, create the full directory structure and all six files in the same turn. Do not stop after only creating the shell or only one or two files.
+- `index.html` must reference `styles.css` and `app.js` with stable `data-pm-id` anchors in the rendered shell.
+- `styles.css` must include responsive rules with `@media`, and visible layout primitives such as `display`, `grid` or `flex`, plus `background`, `border`, and `padding`.
+- `app.js` must render explicit prototype states for `loading`, `empty`, `error`, and `success` or `toast`, even in concept mode. Keep these states lightweight, but make the strings or identifiers visible in the file.
+- `copy.zh-CN.json` should always include visible copy for title/description, value expression, search or placeholder text, error/loading/empty states, and success feedback or actions.
+- `sample-data.json` should use business-shaped collections such as `records`, `dealers`, `opportunities`, or `items`, and each representative item should carry `id` plus owner/context fields such as `owner`, `region`, `status`, `stage`, `group`, `segment`, `growthLabel`, or `riskLabel` when relevant.
+- `product-spec.json` must always include `capabilities`, `pages`, and `entities`, plus at least one structural surface list such as `components` or `regions`, and keep `CAP-` identifiers explicit.
+- Boundary-specific minimums:
+  - A / 概念演示: keep the prototype focused, but still include search/placeholder copy, concept-state feedback, and a simple `components` or `regions` structure in `product-spec.json`.
+  - B / 工作流演示: include the main clickable path, primary state transitions, and the workflow controls that drive the key review path.
+  - C / 验收演示: include permissions, exceptions, evidence mapping, and the states that block or unlock acceptance.
+- Prefer concise, template-like files over ambitious custom implementations. The prototype only needs enough structure to be reviewable and complete; it does not need dense logic or polish that risks incomplete file creation.
+- Your last action in the turn must be the user-facing reply after confirming all six files are present. Do not stop after directory creation, partial patching, or shell scaffolding.

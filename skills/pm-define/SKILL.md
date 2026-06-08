@@ -30,3 +30,12 @@ Use when requirements are too rough for spec, PRD, or prototype work.
    - dependencies
    - open questions
 6. Recommend `$pm-spec` once the feature boundary is stable.
+
+## Execution Rules
+
+- If the conversation already selected A / B / C, do not restate a work plan. Read the local context and write `02-define.md` directly in the same turn.
+- Keep writes limited to the single target artifact unless the task explicitly allows more.
+- Prefer a compact, template-like `02-define.md` over a long narrative draft. The goal is structural completeness, not prose polish.
+- In `entities and fields`, explicitly include field name, field type, whether required, data source / source of truth, and validation rule when the task asks for entity-field detail.
+- When the boundary is **B**, bias the artifact toward `entities / fields / 字段类型 / 是否必填 / 数据来源 / 校验规则 / 业务规则`, and make those labels visibly present in the file.
+- Your last action in the turn must be the user-facing reply after `02-define.md` is written. Do not stop after preparation, file existence checks, or context summaries.

@@ -54,5 +54,7 @@ Use review mindset. Findings first.
      - Include at least one C-finding that keeps `feature name + launch + acceptance + rollback + owner` on the same line.
      - Include at least one C-finding that keeps `dependency + stakeholder + operational risk / 值班 + rollback` on the same line.
      - If launch risk depends on a named stage or gate from the docs, keep that stage anchor on the same line too, such as `T-1`, `GA`, `beta`, `白名单`, `回退演练`.
+     - Treat the stage anchor as mandatory whenever the docs mention one. At least one C-finding line must contain `feature name + stage / gate anchor + launch + acceptance + rollback + owner` together, not split across two findings.
+     - When the docs mention a named stage or gate together with operational coordination, at least one C-finding line must contain `dependency + stakeholder + operational risk / 值班 + rollback + stage / gate anchor` together.
 
 Do not lead with praise or summary. If no findings, state that clearly and list residual risks.

@@ -12,12 +12,12 @@ Turn product scope into release and project-management planning.
 1. Read `../product-forge/references/interaction-protocol.md` and follow it strictly.
 2. First detect whether the conversation already contains the user's boundary selection:
    - If A / B / C is already selected in the conversation, do not ask again; continue directly.
-   - If no selection exists yet, ask exactly one boundary question with exactly these three options, then stop and wait:
-     - 问题：这次 plan 先推进哪类计划边界？
-     - A. 里程碑和范围切分。
-     - B. 风险、依赖和决策门禁。
-     - C. 上线与灰度准备。
-     - 请回复 A / B / C。
+   - If no selection exists yet, ask exactly one boundary question with exactly three options, output exactly the following five lines verbatim with no blank lines, bullets, markdown formatting, or extra text before/after, then stop and wait:
+     问题：这次 plan 先推进哪类计划边界？
+     A. 里程碑和范围切分。
+     B. 风险、依赖和决策门禁。
+     C. 上线与灰度准备。
+     请回复 A / B / C。
    - Before the user selects A / B / C, do not generate artifacts and do not modify any files.
 3. After a boundary is selected, read `SPEC.md`, PRD, prototype, acceptance criteria, `.product/PRODUCT.md`, `.product/STATE.md`, and `.product/config.yaml`. Read `.product/ROADMAP.md` and `.product/PRIORITIZATION.md` if present.
 4. Split milestones by user/business value and decision gates, not by engineering tasks.
